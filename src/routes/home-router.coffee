@@ -1,9 +1,11 @@
 express	= require('express')
 router 	= express.Router() 
 
+Home 	= require '../controllers/home-controller'
+
+
 router.get '/', (req, res) -> 
-	res.send "Welcome home"
-	return
+	Home.welcome req, res
 
 
 module.exports = router

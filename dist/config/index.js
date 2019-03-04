@@ -1,11 +1,45 @@
-// database 	= require './database'
-var server_config;
+var Config, database, server_config;
+
+database = require('./database');
 
 server_config = require('./server');
 
-module.exports = {
-  server: {
-    port: server_config[process.env.NODE_ENV].port ? server_config[process.env.NODE_ENV].port : server_config['default'].port,
-    salt: server_config[process.env.NODE_ENV].salt ? server_config[process.env.NODE_ENV].salt : server_config['default'].salt
-  }
-};
+Config = (function() {
+  var environment;
+
+  class Config {
+    constructor() {}
+
+  };
+
+  
+  // set environment as default if not set
+  environment = process.env.NODE_ENV === void 0 ? 'default' : process.env.NODE_ENV;
+
+  // server configuration
+  Config.server = {
+    port: server_config[environment].port,
+    env: environment
+  };
+
+  // security
+  Config.security = {
+    salt: server_config[environment].salt,
+    salt_rounds: server_config[environment].salt_rounds
+  };
+
+  // database configuration
+  Config.database = {
+    host: database[environment].host,
+    database: database[environment].database,
+    username: database[environment].username,
+    password: database[environment].password,
+    dialect: database[environment].dialect,
+    logging: database[environment].logging
+  };
+
+  return Config;
+
+}).call(this);
+
+module.exports = Config;

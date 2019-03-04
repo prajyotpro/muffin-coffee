@@ -23,7 +23,9 @@
   "homepage": "https://github.com/prajyotpro/muffin-coffee#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "helmet": "^3.13.0"
+    "helmet": "^3.13.0",
+    "mysql2": "^1.6.5",
+    "sequelize": "^4.43.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

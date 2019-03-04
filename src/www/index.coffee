@@ -5,6 +5,7 @@ app 	= require('express')()
 server  = require('http').createServer(app)
 
 config 	= require '../config/'
+db 		= require '../core/database'
 
 helmet 	= require 'helmet'
 
@@ -12,7 +13,6 @@ helmet 	= require 'helmet'
 if cluster.isMaster 
 
 	console.log "Master process is running on #{process.env.NODE_ENV} environment" 
-	console.log config
 
 	for cpu in cpus 
 		cluster.fork()
@@ -30,7 +30,12 @@ else
 
 	router 	= require('../routes/')(app)
 
-
 	app.listen config.server.port, () -> 
-		console.log("Worker running #{process.pid}, listening to port #{config.server.port}")
+		db.Connection.sync() 
+			.then () -> 
+				console.log "... database synced!"
+				console.log("Worker running #{process.pid}, listening to port #{config.server.port}")
+			.catch (err) -> 
+				throw err
+		
 
